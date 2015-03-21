@@ -17,11 +17,9 @@ private:
 	int findKth(int A[], int m, int B[], int n, int k)
 	{
 		if (m > n)
-			findKth(B, n, A, m, k);
+			return findKth(B, n, A, m, k);
 
 		if(m == 0)
-			return A[k - 1];
-		if(n == 0)
 			return B[k - 1];
 
 		if (k == 1)
@@ -30,13 +28,14 @@ private:
 		if(m +n == k)
 			return max(A[m - 1], B[n - 1]);
 
-		int mid = min(k / 2, m);
+		int pa = min(k / 2, m);
+		int pb = k - pa;
 
-		if(A[mid - 1] > B[n - mid - 1])
-			return findKth(A, mid, B, n, k);
-		else if(A[mid] == B[n - mid])
-			return findKth(A, mid, B, n, k);
+		if(A[pa - 1] > B[pb - 1])
+			return findKth(A, pa, B + pb, n - pb, k - pb);
+		else if(A[pa - 1] < B[pb - 1])
+			return findKth(A + pa, m - pa, B, pb, k - pa);
 		else
-			return findKth(A, m, B, n - mid, k);
+			return A[pa - 1];
 	}
 };
