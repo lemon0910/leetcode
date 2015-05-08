@@ -11,23 +11,28 @@ class Solution {
 public:
     vector<Interval> insert(vector<Interval>& intervals, Interval newInterval) {
         vector<Interval> ret = intervals;
+        if(ret.empty())
+        {
+            ret.push_back(newInterval);
+            return ret;
+        }
         int index = -1;
         int left = 0;
-        int right = ret.size();
+        int right = ret.size() - 1;
         while(left <= right)
         {
-            int mid = (left + end) / 2;
-            if(ret[mid] == newInterval.start)
+            int mid = (left + right) / 2;
+            if(ret[mid].start == newInterval.start)
             {
                 index = mid;
                 break;
             }
-            else if(ret[mid] == newInterval.start)
+            else if(ret[mid].start > newInterval.start)
                 right = mid - 1;
             else
                 left = mid + 1;
         }
-        
+
         if(index != -1)
         {
             vector<Interval>::iterator it = ret.begin();
@@ -38,7 +43,7 @@ public:
                 it++;
             }
             vector<Interval>::iterator itt = it;
-            while(newInterval.end >= it->end)
+            while(it != ret.end() && newInterval.end >= it->end)
             {
                 it++;
             }
@@ -46,8 +51,7 @@ public:
                 it++;
             it--;
             newInterval.end = max(newInterval.end, it->end);
-            for(auto start = itt; start <= it; ++ start)
-                ret.erase(start);
+            ret.erase(itt, it + 1);
             ret.insert(itt, newInterval);
         }
         else
@@ -59,7 +63,7 @@ public:
                 newInterval.start = min(ret[left - 1].start, newInterval.start);
                 newInterval.end = max(ret[left - 1].end, newInterval.end);
             }
-            
+
             vector<Interval>::iterator it = ret.begin();
             int temp = left;
             if(flag)
@@ -70,19 +74,24 @@ public:
                 it++;
             }
             vector<Interval>::iterator itt = it;
-            while(newInterval.end >= it->end)
+            bool diret = true;
+            while(it != ret.end() && newInterval.end >= it->end)
             {
                 it++;
+                diret = false;
             }
             if(it != ret.end() && it->start <= newInterval.end)
+            {
                 it++;
+                diret = false;
+            }
             it--;
             newInterval.end = max(newInterval.end, it->end);
-            for(auto start = itt; start <= it; ++ start)
-                ret.erase(start);
+            if(!diret)
+                ret.erase(itt, it + 1);
             ret.insert(itt, newInterval);
         }
-        
+
         return ret;
     }
 };
