@@ -41,21 +41,13 @@ public:
             int index = -1;
             while(k <= j)
             {
-                if(nums[index] == 0)
-                {
+                index++;
+                while(nums[index] == 1)
                     index++;
-                }
-                else
-                {
-                    while(nums[index] == 1)
-                        index++;
-                }
                 k++;
             }
-            while(index <= n && nums[index - 1] == 1)
-                        index++;
-            nums[index - 1] = 1;
-            ret += '0' + index;
+            nums[index] = 1;
+            ret += '0' + index + 1;
         }
 
         return ret;
